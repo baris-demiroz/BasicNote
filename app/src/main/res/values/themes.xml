@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorSecondary">@color/titleColor</item>
         <item name="colorAccent">@color/titleColor</item>
-        <item name="android:windowBackground">#1B1B1B</item>
+        <item name="android:windowBackground">#000000</item>
 
         <!-- FAB simge rengi -->
         <item name="colorOnPrimary">@color/white</item>
