@@ -5,6 +5,15 @@
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="colorPrimary">#121212</item>
         <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="android:windowBackground">#121212</item>
+        <item name="android:windowBackground">#000000</item>
+
+        <!-- FAB simge rengi -->
+
+
+        <!-- METİN SEÇİM RENGİ -->
+        <item name="colorControlActivated">@color/selectionColor</item>
+        <item name="android:textColorHighlight">@color/selectionColor</item>
+        <item name="colorSecondaryContainer">@color/selectionColor</item>
+
     </style>
 </resources>

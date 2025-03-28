@@ -1,5 +1,6 @@
 package com.example.mynoteapp.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class NotesAdapter(val notesListesi : MutableList<Note>) : RecyclerView.Adapter<NotesAdapter.NotesHolder>() {
 
@@ -49,6 +53,11 @@ class NotesAdapter(val notesListesi : MutableList<Note>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: NotesHolder, position: Int) {
         holder.binding.recyclerViewTitle.text = notesListesi[position].title
         holder.binding.recyclerViewSubtitle.text = notesListesi[position].note
+
+        val timestamp = notesListesi[position].date // Long türünde tarih verisi
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val formattedDate = dateFormat.format(Date(timestamp))
+        holder.binding.recyclerViewDate.text = formattedDate
         holder.itemView.setOnClickListener {
             val action = ListeFragmentDirections.actionListeFragmentToNoteFragment(
                 bilgi = "eski",
@@ -58,21 +67,7 @@ class NotesAdapter(val notesListesi : MutableList<Note>) : RecyclerView.Adapter<
         }
 
         holder.itemView.setOnLongClickListener {
-            // Dialog gösterme
-            val builder = AlertDialog.Builder(holder.itemView.context, R.style.CustomAlertDialog)
-            builder.setMessage("Silmek ister misiniz?")
-                .setCancelable(true)  // Dialog dışına tıklanarak kapanabilmesi için true yapıyoruz
-                .setPositiveButton("Evet") { dialog, id ->
-                    // Silme işlemini burada gerçekleştir
-                   // deleteNote(position)  // Burada silme işlemi gerçekleştirilir
-                    deleteNote(position)
-                }
-                .setNegativeButton("Hayır") { dialog, id ->
-                    dialog.dismiss()  // "Hayır" dediyse, dialog'u kapat
-                }
-
-            // Dialog'u göster
-            builder.create().show()
+            showDeleteDialog(it.context, position)
 
             // true döndürerek işlemin tamamlandığını belirt
             true
@@ -80,27 +75,41 @@ class NotesAdapter(val notesListesi : MutableList<Note>) : RecyclerView.Adapter<
 
     }
 
-    fun deleteNote(position: Int) {
-        val silinecekNot = notesListesi[position] // Silinecek notu al
+    fun showDeleteDialog(context: Context, position: Int) {
+        val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
+        builder.setMessage("Silmek ister misiniz?")
+            .setCancelable(true)  // Dialog dışına tıklanarak kapanabilmesi için true yapıyoruz
+            .setPositiveButton("Evet") { dialog, id ->
+                // Silme işlemini burada gerçekleştir
+                deleteNote(position)  // Burada silme işlemi gerçekleştirilir
+            }
+            .setNegativeButton("Hayır") { dialog, id ->
+                dialog.dismiss()  // "Hayır" dediyse, dialog'u kapat
+            }
 
-        // Coroutine ile arka planda Room işlemi yapılır
+        // Dialog'u göster
+        builder.create().show()
+    }
+
+    fun deleteNote(position: Int) {
+        val silinecekNot = notesListesi[position]
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // RxJava Completable kullanarak silme işlemini başlatıyoruz
                 noteDao.delete(silinecekNot)
                     .subscribe({
-                        // Silme işlemi başarılı oldu
+
                         CoroutineScope(Dispatchers.Main).launch {
                             (notesListesi as MutableList).removeAt(position)
                             notifyItemRemoved(position)
                             notifyItemRangeChanged(position, notesListesi.size)
                         }
                     }, { error ->
-                        // Hata oluştuğunda buraya gelir
+                      println(error)
 
                     })
             } catch (e: Exception) {
-                // Hata yakalama
+                println(e)
 
             }
         }

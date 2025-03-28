@@ -1,11 +1,15 @@
 package com.example.mynoteapp.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.room.Room
@@ -27,6 +31,7 @@ class NoteFragment : Fragment() {
 
     private lateinit var db : NoteDatabase
     private lateinit var  noteDao : NotesDao
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,7 @@ class NoteFragment : Fragment() {
                 val title = binding.txtTitle.text.toString().trim()
                 val note = binding.txtNote.text.toString().trim()
 
+
                 if (title.isNotEmpty() && note.isNotEmpty()) {
                     kaydet(it)
                 } else {
@@ -63,24 +69,28 @@ class NoteFragment : Fragment() {
 
 
         binding.btnSil.setOnClickListener{
-            sil(it)
+            showDeleteDialog(it.context,it)
         }
+
+
 
         arguments?.let {
             var bilgi =NoteFragmentArgs.fromBundle(it).bilgi
+
 
             if (bilgi == "yeni") {
                 secilenNote = null
                 binding.btnSil.isEnabled = false
                 binding.btnKaydet.isEnabled = true
+                binding.btnSil.visibility = View.GONE
                 binding.btnSil.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.gray))
                 binding.txtNote.setText("")
                 binding.txtTitle.setText("")
+
             }
             else{
                 binding.btnKaydet.isEnabled = true
                 binding.btnSil.isEnabled = true
-                binding.btnKaydet.setText("Güncelle")
                 binding.btnKaydet.setOnClickListener{
                     val title = binding.txtTitle.text.toString().trim()
                     val note = binding.txtNote.text.toString().trim()
@@ -105,6 +115,22 @@ class NoteFragment : Fragment() {
 
         }
 
+    }
+
+    private fun showDeleteDialog(context: Context,view: View) {
+        val builder = AlertDialog.Builder(context, R.style.CustomAlertDialog)
+        builder.setMessage("Silmek ister misiniz?")
+            .setCancelable(true)  // Dialog dışına tıklanarak kapanabilmesi için true yapıyoruz
+            .setPositiveButton("Evet") { dialog, id ->
+                // Silme işlemini burada gerçekleştir
+                sil(view)  // Burada silme işlemi gerçekleştirilir
+            }
+            .setNegativeButton("Hayır") { dialog, id ->
+                dialog.dismiss()  // "Hayır" dediyse, dialog'u kapat
+            }
+
+        // Dialog'u göster
+        builder.create().show()
     }
 
     private fun handleResponseForSelect(note: Note){

@@ -6,35 +6,56 @@
     android:padding="10dp"
     android:background="@drawable/rounded_background"
     android:gravity="center_vertical"
-    android:layout_marginBottom="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp">
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
-    <!-- Ana başlık metni -->
-    <TextView
-        android:id="@+id/recyclerViewTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Başlık"
-        android:textSize="20sp"
-        android:textColor="@color/titleColor"
-        android:maxLines="1"
-        android:textStyle="bold"
-        android:layout_marginTop="-5dp"
-        android:gravity="left"
-        android:padding="4sp"
-        android:elevation="5dp"
-        android:shadowColor="@android:color/black"
-        android:shadowRadius="4" />
+        android:orientation="horizontal">
 
-    <!-- Alt açıklama metni -->
+        <TextView
+            android:id="@+id/recyclerViewTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Başlık"
+            android:textSize="17sp"
+            android:textColor="@color/titleColor"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:layout_marginTop="-5dp"
+            android:gravity="start"
+            android:padding="4sp"
+            android:elevation="5dp"
+            android:shadowColor="@android:color/black"
+            android:shadowRadius="4" />
+
+        <TextView
+            android:id="@+id/recyclerViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="13sp"
+            android:textColor="@color/titleColor"
+            android:maxLines="1"
+            android:layout_marginTop="-5dp"
+            android:gravity="end"
+            android:padding="4sp"
+            android:elevation="5dp"
+            android:shadowColor="@android:color/black"
+            android:shadowRadius="4" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/recyclerViewSubtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Açıklama metni burada olacak."
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:textColor="@android:color/darker_gray"
+        android:minLines="2"
         android:maxLines="2"
         android:gravity="left"
         android:padding="2dp" />
