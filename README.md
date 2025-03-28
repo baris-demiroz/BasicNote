@@ -8,7 +8,7 @@ A simple Kotlin Note Taking App.
 
 <table>
   <tr>
-    <td><img src="images/ssMainPage.png.png" width="300"/></td>
-    <td><img src="images/SsSavePage.png.png" width="300"/></td>
+    <td><img src="images/ssMainPage.png" width="300"/></td>
+    <td><img src="images/SsSavePage.png" width="300"/></td>
   </tr>
 </table>
